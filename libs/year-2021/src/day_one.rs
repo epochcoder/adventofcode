@@ -1,13 +1,12 @@
 use std::cmp::Ordering;
-use std::fs::File;
-use std::io::{BufReader, BufRead};
+use utils;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 struct Depth(i32);
 
 impl Depth {
 
-    fn new(line: String) -> Self {
+    fn new(line: &String) -> Self {
         Depth(line.parse::<i32>().unwrap())
     }
 }
@@ -31,11 +30,9 @@ impl Ord for Depth {
 }
 
 fn read_lines() -> Vec<Depth> {
-    let input = File::open("day_1.txt".to_string()).unwrap();
-    let reader = BufReader::new(input);
-
-    reader.lines()
-        .map(|line| Depth::new(line.unwrap()))
+    utils::read_lines("day_1.txt")
+        .iter()
+        .map(|line | Depth::new(line))
         .collect()
 }
 /// To do this, count the number of times a depth measurement increases from the previous measurement.
@@ -68,7 +65,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day_one() {
+    fn test() {
         println!("increases: {:?}", count_increases(read_lines()));
     }
 }
