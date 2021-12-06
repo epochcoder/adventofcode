@@ -1,8 +1,6 @@
-use std::io;
 use std::fs::File;
 use std::collections::HashSet;
 use std::io::{BufReader, BufRead};
-use std::alloc::System;
 
 fn day_1() -> () {
     let time = std::time::SystemTime::now();

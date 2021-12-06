@@ -1,3 +1,5 @@
+mod day_one;
+
 #[cfg(test)]
 mod tests {
     #[test]
