@@ -30,7 +30,7 @@ impl Ord for Depth {
 }
 
 fn read_lines() -> Vec<Depth> {
-    utils::read_lines("day_1.txt")
+    utils::read_lines("resources/day_1.txt")
         .iter()
         .map(|line | Depth::new(line))
         .collect()

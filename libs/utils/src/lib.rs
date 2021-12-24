@@ -1,3 +1,5 @@
+pub mod scanner;
+
 use std::fs::File;
 use std::io::{BufReader, BufRead};
 
