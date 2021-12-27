@@ -64,21 +64,42 @@ impl Line {
     /// plots this line on the provided map
     /// if a point already existed, increase the intersection count
     fn plot(&self, width: usize, map: &mut Vec<u32>) {
+        let mut mark = |x, y| {
+            let idx = map_idx(width as i32, x, y);
+            *map.get_mut(idx).unwrap() += 1;
+        };
+
         if self.is_vertical() {
             for y in self.start.y..=self.end.y {
-                let idx = map_idx(width as i32, self.start.x, y);
-                *map.get_mut(idx).unwrap() += 1;
-                // println!("(v) marking line at {:?}, intersects: {}",
-                //          Point::new(self.start.x, y), map.get(idx).unwrap());
+                mark(self.start.x, y);
             }
-        }
-
-        if self.is_horizontal() {
+        } else if self.is_horizontal() {
             for x in self.start.x..=self.end.x {
-                let idx = map_idx(width as i32, x, self.start.y);
-                *map.get_mut(idx).unwrap() += 1;
-                // println!("(h) marking line at {:?}, intersects: {}",
-                //          Point::new(x, self.start.y), map.get(idx).unwrap());
+                mark(x, self.start.y);
+            }
+        } else {
+            // diagonal (45 only)
+            let mut x = self.start.x;
+            let mut y = self.start.y;
+
+            loop {
+                mark(x, y);
+
+                if x < self.end.x {
+                    x += 1;
+                } else if x > self.end.x {
+                    x -= 1;
+                } else {
+                    break;
+                }
+
+                if y < self.end.y {
+                    y += 1;
+                } else if y > self.end.y {
+                    y -= 1;
+                } else {
+                    break;
+                }
             }
         }
     }
