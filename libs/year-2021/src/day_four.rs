@@ -10,7 +10,7 @@ impl Piece {
     fn new() -> Self {
         Self {
             num: 0,
-            chosen: false
+            chosen: false,
         }
     }
 }
@@ -19,16 +19,17 @@ impl Piece {
 struct Board {
     width: usize,
     height: usize,
-    content: Vec<Piece>
+    content: Vec<Piece>,
+    bingo: bool,
 }
 
 impl Board {
-
     fn new(w: usize, h: usize) -> Self {
         Self {
             width: w,
             height: h,
-            content: vec![Piece::new(); w * h]
+            content: vec![Piece::new(); w * h],
+            bingo: false,
         }
     }
 
@@ -102,8 +103,16 @@ impl Board {
         full_column
     }
 
-    fn bingo(&self) -> bool {
-        self.has_row_marked() || self.has_column_marked()
+    fn bingo(&mut self) -> bool {
+        if self.bingo {
+            return true;
+        }
+
+        if self.has_row_marked() || self.has_column_marked() {
+            self.bingo = true;
+        }
+
+        self.bingo
     }
 }
 
@@ -127,17 +136,18 @@ fn bingo_baby() {
 
     let mut boards = load_boards(lines);
     for chosen in random_nums {
-        //println!("Playing bingo with: {:?}", chosen);
+        let winning_boards: Vec<(i32, &mut Board)> = boards
+            .iter_mut()
+            .filter(|board| !board.bingo)
+            .filter_map(|board| {
+                board.mark_board(chosen);
 
-        let winning_boards: Vec<(i32, &mut Board)> = boards.iter_mut().filter_map(|board| {
-            board.mark_board(chosen);
-
-            if board.bingo() {
-                Some((chosen, board))
-            } else {
-                None
-            }
-        }).collect();
+                if board.bingo() {
+                    Some((chosen, board))
+                } else {
+                    None
+                }
+            }).collect();
 
         if winning_boards.len() > 0 {
             let (winning_num, board) = winning_boards.get(0).unwrap();
@@ -146,10 +156,8 @@ fn bingo_baby() {
                 .map(|piece| piece.num)
                 .sum();
 
-            // Found winning board with number: 68, sum: 859, answer: 58412
-            println!("Found winning board with number: {}, sum: {}, answer: {}",
-                     winning_num, sum, sum * winning_num);
-            break;
+            println!("Found {} winning board(s); first won with number: {}, sum: {}, answer: {}",
+                     winning_boards.len(), winning_num, sum, sum * winning_num);
         }
     }
 }
