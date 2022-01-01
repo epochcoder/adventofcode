@@ -4,15 +4,12 @@ static WIDTH: usize = 12;
 
 #[derive(PartialEq, Eq, Debug, Clone)]
 struct Line {
-    line: String
+    line: String,
 }
 
 impl Line {
-
     fn new(line: String) -> Self {
-        Self {
-            line
-        }
+        Self { line }
     }
 
     fn as_decimal(&self) -> isize {
@@ -34,9 +31,7 @@ fn calculate_life_support_rating() -> i32 {
         ones_count >= zeroes_count
     });
 
-    let co2_rating = calculate_rating(&lines, |ones_count, zeroes_count| {
-        zeroes_count > ones_count
-    });
+    let co2_rating = calculate_rating(&lines, |ones_count, zeroes_count| zeroes_count > ones_count);
 
     (oxygen_rating * co2_rating) as i32
 }
@@ -47,8 +42,8 @@ fn calculate_rating(lines: &Vec<Line>, filter: impl Fn(usize, usize) -> bool) ->
 
     for i in 0..WIDTH {
         // partition by zero's and ones
-        let (ones, zeroes): (Vec<&Line>, Vec<&Line>) = lines.iter()
-            .partition(|line| line.char_at_column(i, '1'));
+        let (ones, zeroes): (Vec<&Line>, Vec<&Line>) =
+            lines.iter().partition(|line| line.char_at_column(i, '1'));
 
         // based on the predicate, keep only the lines with the most or least
         if filter(ones.len(), zeroes.len()) {
@@ -60,7 +55,7 @@ fn calculate_rating(lines: &Vec<Line>, filter: impl Fn(usize, usize) -> bool) ->
         }
 
         // reduce set of candidates for next iteration
-        lines.retain(|line | filtered_lines.contains(line));
+        lines.retain(|line| filtered_lines.contains(line));
 
         if filtered_lines.len() == 1 {
             break;

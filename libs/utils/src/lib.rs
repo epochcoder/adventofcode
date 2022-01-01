@@ -1,15 +1,13 @@
-pub mod scanner;
-
 use std::fs::File;
-use std::io::{BufReader, BufRead};
+use std::io::{BufRead, BufReader};
+
+pub mod scanner;
 
 pub fn read_lines(file: &str) -> Vec<String> {
     let input = File::open(file.to_string()).unwrap();
     let reader = BufReader::new(input);
 
-    reader.lines()
-        .map(|line| line.unwrap())
-        .collect()
+    reader.lines().map(|line| line.unwrap()).collect()
 }
 
 /// Considers a map using row-first encoding since we have a single dimension vector

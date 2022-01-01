@@ -1,15 +1,14 @@
 #[derive(Debug)]
 pub struct Scanner {
     cursor: usize,
-    chars: Vec<char>
+    chars: Vec<char>,
 }
 
 impl Scanner {
-
     pub fn new(string: &str) -> Self {
         Self {
             cursor: 0,
-            chars: string.chars().collect()
+            chars: string.chars().collect(),
         }
     }
 
@@ -31,7 +30,7 @@ impl Scanner {
                 self.cursor += 1;
                 Some(ch)
             }
-            None => None
+            None => None,
         }
     }
 
@@ -42,7 +41,7 @@ impl Scanner {
                 self.pop();
                 true
             }
-            _ => false
+            _ => false,
         }
     }
 
@@ -56,21 +55,16 @@ impl Scanner {
     }
 
     /// transforms a character into a value of T
-    pub fn transform<T>(
-        &mut self,
-        callback: impl FnOnce(&char) -> Option<T>
-    ) -> Option<T> {
+    pub fn transform<T>(&mut self, callback: impl FnOnce(&char) -> Option<T>) -> Option<T> {
         match self.chars.get(self.cursor) {
-            Some(character) => {
-                match callback(character) {
-                    Some(result) => {
-                        self.cursor += 1;
-                        Some(result)
-                    }
-                    None => None
+            Some(character) => match callback(character) {
+                Some(result) => {
+                    self.cursor += 1;
+                    Some(result)
                 }
-            }
-            None => None
+                None => None,
+            },
+            None => None,
         }
     }
 }
@@ -81,7 +75,9 @@ mod tests {
 
     #[derive(Eq, PartialEq, Debug)]
     enum Test {
-        A, B, C
+        A,
+        B,
+        C,
     }
 
     #[test]
@@ -112,12 +108,15 @@ mod tests {
     #[test]
     fn test_transform() {
         let mut scanner = Scanner::new("abc");
-        assert_eq!(Some(Test::A), scanner.transform(|character| match character {
-            'a' => Some(Test::A),
-            'b' => Some(Test::B),
-            'c' => Some(Test::C),
-            _ => None
-        }));
+        assert_eq!(
+            Some(Test::A),
+            scanner.transform(|character| match character {
+                'a' => Some(Test::A),
+                'b' => Some(Test::B),
+                'c' => Some(Test::C),
+                _ => None,
+            })
+        );
     }
 
     #[test]

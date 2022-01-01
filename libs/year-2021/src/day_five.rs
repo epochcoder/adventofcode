@@ -16,10 +16,7 @@ struct Line {
 
 impl Point {
     fn new(x: i32, y: i32) -> Self {
-        Self {
-            x,
-            y,
-        }
+        Self { x, y }
     }
 }
 
@@ -27,14 +24,16 @@ impl TryFrom<&str> for Point {
     type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let split = value.split(',')
+        let split = value
+            .split(',')
             .into_iter()
             .map(|line| line.trim())
             .collect::<Vec<_>>();
 
         Ok(Point::new(
             split.get(0).unwrap().parse::<i32>().unwrap(),
-            split.get(1).unwrap().parse::<i32>().unwrap()))
+            split.get(1).unwrap().parse::<i32>().unwrap(),
+        ))
     }
 }
 
@@ -47,10 +46,7 @@ impl Line {
             (p2, p1)
         };
 
-        Self {
-            start,
-            end,
-        }
+        Self { start, end }
     }
 
     fn is_vertical(&self) -> bool {
@@ -109,31 +105,31 @@ impl TryFrom<&str> for Line {
     type Error = &'static str;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let split = value.split("->")
+        let split = value
+            .split("->")
             .into_iter()
             .map(|line| line.trim())
             .collect::<Vec<_>>();
 
         Ok(Line::new(
             Point::try_from(*split.get(0).unwrap()).unwrap(),
-            Point::try_from(*split.get(1).unwrap()).unwrap()))
+            Point::try_from(*split.get(1).unwrap()).unwrap(),
+        ))
     }
 }
 
 fn calculate() {
-    let lines: Vec<Line> = read_lines("resources/day_5.txt").iter()
+    let lines: Vec<Line> = read_lines("resources/day_5.txt")
+        .iter()
         .map(|line| Line::try_from(line.as_str()).unwrap())
         .collect();
 
     let (w, h) = (1000, 1000);
     let mut map: Vec<u32> = vec![0; w * h];
 
-    lines.into_iter()
-        .for_each(|line| line.plot(w, &mut map));
+    lines.into_iter().for_each(|line| line.plot(w, &mut map));
 
-    let count_intersects = map.into_iter()
-        .filter(|int| *int >= 2 as u32)
-        .count();
+    let count_intersects = map.into_iter().filter(|int| *int >= 2 as u32).count();
     println!("intersects count: {}", count_intersects);
 }
 

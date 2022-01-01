@@ -57,7 +57,8 @@ impl Board {
     }
 
     fn mark_board(&mut self, num: i32) {
-        self.content.iter_mut()
+        self.content
+            .iter_mut()
             .filter(|piece| piece.num == num)
             .for_each(|piece| piece.chosen = true);
     }
@@ -117,15 +118,13 @@ impl Board {
 }
 
 fn split_by_comma(line: &str) -> Vec<i32> {
-    line
-        .split(',')
+    line.split(',')
         .map(|num| num.parse::<i32>().unwrap())
         .collect::<Vec<_>>()
 }
 
 fn split_by_whitespace(line: &str) -> Vec<i32> {
-    line
-        .split_whitespace()
+    line.split_whitespace()
         .map(|num| num.parse::<i32>().unwrap())
         .collect::<Vec<_>>()
 }
@@ -147,17 +146,25 @@ fn bingo_baby() {
                 } else {
                     None
                 }
-            }).collect();
+            })
+            .collect();
 
         if winning_boards.len() > 0 {
             let (winning_num, board) = winning_boards.get(0).unwrap();
-            let sum: i32 = board.content.iter()
+            let sum: i32 = board
+                .content
+                .iter()
                 .filter(|piece| !piece.chosen)
                 .map(|piece| piece.num)
                 .sum();
 
-            println!("Found {} winning board(s); first won with number: {}, sum: {}, answer: {}",
-                     winning_boards.len(), winning_num, sum, sum * winning_num);
+            println!(
+                "Found {} winning board(s); first won with number: {}, sum: {}, answer: {}",
+                winning_boards.len(),
+                winning_num,
+                sum,
+                sum * winning_num
+            );
         }
     }
 }
@@ -179,15 +186,12 @@ fn load_boards(lines: Vec<String>) -> Vec<Board> {
         }
 
         let size = &boards.len();
-        boards.get_mut(*size - 1)
-            .unwrap()
-            .intialize_row(row, line);
+        boards.get_mut(*size - 1).unwrap().intialize_row(row, line);
         row += 1;
     }
 
     boards
 }
-
 
 #[cfg(test)]
 mod tests {

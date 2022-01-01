@@ -12,16 +12,15 @@ impl Depth {
 fn read_lines() -> Vec<Depth> {
     utils::read_lines("resources/day_1.txt")
         .iter()
-        .map(|line | Depth::from_string(line))
+        .map(|line| Depth::from_string(line))
         .collect()
 }
 
 fn sum_depths(depths: &Vec<&Depth>) -> i32 {
-    depths.into_iter()
+    depths
+        .into_iter()
         .map(|d| d.0)
-        .reduce(|a, b | {
-            a + b
-        })
+        .reduce(|a, b| a + b)
         .unwrap()
 }
 
@@ -35,7 +34,7 @@ fn sum_depths(depths: &Vec<&Depth>) -> i32 {
 // Stop when there aren't enough measurements left to create a new three-measurement sum.
 fn count_increases(depths: Vec<Depth>) -> i32 {
     if depths.is_empty() {
-        return 0
+        return 0;
     }
 
     let win_size = 3;
@@ -53,10 +52,8 @@ fn count_increases(depths: Vec<Depth>) -> i32 {
         }
 
         let sum_last: i32 = match &last_win {
-            Some(stack) => {
-                sum_depths(stack)
-            },
-            None => 0
+            Some(stack) => sum_depths(stack),
+            None => 0,
         };
 
         let sum_curr = sum_depths(&curr_win);

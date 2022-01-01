@@ -1,4 +1,5 @@
 use std::convert::TryFrom;
+
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -12,7 +13,7 @@ enum Direction {
 #[derive(Debug, PartialEq, Eq)]
 struct SubVec {
     direction: Direction,
-    amount: i32
+    amount: i32,
 }
 
 impl TryFrom<&String> for SubVec {
@@ -32,14 +33,17 @@ impl TryFrom<&String> for SubVec {
                 let dir = caps.get(1).unwrap().as_str();
                 let amount = caps.get(2).unwrap().as_str();
 
-                Ok(SubVec::new(match dir {
-                    "up" => Direction::Up,
-                    "down" => Direction::Down,
-                    "forward" => Direction::Forward,
-                    _ => panic!("unknown direction matched")
-                }, amount.parse::<i32>().unwrap()))
+                Ok(SubVec::new(
+                    match dir {
+                        "up" => Direction::Up,
+                        "down" => Direction::Down,
+                        "forward" => Direction::Forward,
+                        _ => panic!("unknown direction matched"),
+                    },
+                    amount.parse::<i32>().unwrap(),
+                ))
             }
-            None => Err("could not get capturing groups")
+            None => Err("could not get capturing groups"),
         }
     }
 }
@@ -48,7 +52,7 @@ impl SubVec {
     fn new(dir: Direction, amount: i32) -> Self {
         Self {
             direction: dir,
-            amount
+            amount,
         }
     }
 }
@@ -56,7 +60,7 @@ impl SubVec {
 fn read_lines() -> Vec<SubVec> {
     utils::read_lines("resources/day_2.txt")
         .iter()
-        .map(|line | SubVec::try_from(line))
+        .map(|line| SubVec::try_from(line))
         .filter(|res| res.is_ok())
         .map(|res| res.unwrap())
         .collect()
@@ -90,7 +94,7 @@ fn calculate_position_aim() -> i32 {
             Direction::Forward => {
                 position += sub.amount;
                 depth += aim * sub.amount;
-            },
+            }
         }
     }
 
@@ -100,7 +104,6 @@ fn calculate_position_aim() -> i32 {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]
